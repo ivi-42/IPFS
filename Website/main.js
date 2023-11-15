@@ -1,6 +1,5 @@
-const ipfsClient = require('ipfs-http-client');
-const ipfs = ipfsClient.create({ host: 'localhost', port: '5001', protocol: 'http' });
-
+// Access IpfsHttpClient from the global scope
+const ipfs = window.IpfsHttpClient.create({ host: 'localhost', port: '5001', protocol: 'http' });
 
 document.getElementById('uploadButton').addEventListener('click', async () => {
     const fileInput = document.getElementById('fileInput');
@@ -9,7 +8,7 @@ document.getElementById('uploadButton').addEventListener('click', async () => {
         try {
             const fileHash = await uploadToIPFS(file);
             console.log(`File uploaded to IPFS with hash: ${fileHash}`);
-            // Here you might also want to call your smart contract to store the CID
+            // Call smart contract to store the CID here
         } catch (error) {
             alert(`File upload failed: ${error.message}`);
         }
@@ -18,11 +17,7 @@ document.getElementById('uploadButton').addEventListener('click', async () => {
     }
 });
 
-// Placeholder function for uploadToIPFS, this should be replaced with your actual IPFS upload logic.
 async function uploadToIPFS(file) {
-    const ipfsClient = require('ipfs-http-client');
-    const ipfs = ipfsClient.create({ host: 'localhost', port: '5001', protocol: 'http' });
-
     try {
         const addedFile = await ipfs.add(file);
         const fileHash = addedFile.cid.toString();
