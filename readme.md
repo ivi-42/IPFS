@@ -6,8 +6,8 @@ This project borns as an "answer" to the question of how, after waiting hours fo
 
 So i started an hypotetical decentralised server, but it didnt work for long, as I was the only person in it haha. 
 
-This means, decentralizations needs adoption for it to work proprerly. This is reflected also with the concept of "pinging", where data is stored till something is storing it, a concept that, if extrapolated from thechnical to biological, it is a bit like the worm that we simulated here. Maybe better than vendor lock-in, maybe worst. Depends how much important are the data.
-
+This means, decentralizations needs adoption for it to work proprerly. This is reflected also with the concept of "pinging", where data is stored till something is storing it, a concept that, if extrapolated from thechnical to biological*, it is a bit like the worm that we simulated here. Maybe better than vendor lock-in, maybe worst. Depends how much important are the data.
+*Literally, that as the worm simulated here it "borns" and it "dies", the data of its existence were simulated, yet biological.
 
 ## Directory Structure
 
