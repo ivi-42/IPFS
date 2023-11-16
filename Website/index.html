@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Decentralized Document Storage for Worms</title>
+    <!-- Include ethers.js as a module -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.esm.min.js"></script>
     <!-- Include IPFS HTTP client library -->
-    <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
 </head>
 <body>
     <input type="file" id="fileInput">
     <button id="uploadButton">Upload</button>
-
-    <!-- Include ethers.js as a module -->
-    <script type="module">
-        // Importing ethers from the CDN as a module
-        import { ethers } from "https://cdn.jsdelivr.net/npm/ethers/dist/ethers.esm.min.js";
-        
-        // main.js code access to the ethers object.
-        
-    </script>
+    <span id="statusMessage"></span>
+    
+    <!-- Reference to your main.js file as a module -->
+    <script type="module" src="main.js"></script>
 </body>
 </html>
