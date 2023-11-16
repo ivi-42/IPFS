@@ -1,6 +1,23 @@
 // Import the ethers library from a CDN
 import { ethers } from 'https://cdn.jsdelivr.net/npm/ethers/dist/ethers.esm.min.js';
 
+
+
+// Function to update the status message with a link
+function updateStatusMessage(message, fileHash = '') {
+  const statusMessageElement = document.getElementById('statusMessage');
+  if(fileHash) {
+      // If a file hash is provided, add a link to the message
+      statusMessageElement.innerHTML = `${message} <a href="http://localhost:8080/ipfs/${fileHash}" target="_blank">Access the file</a>.`;
+  } else {
+      // If no file hash is provided, just show the message
+      statusMessageElement.textContent = message;
+  }
+}
+
+
+
+
 // Access the IPFS HTTP client from the global scope
 const ipfs = window.IpfsHttpClient.create({ host: 'localhost', port: '5001', protocol: 'http' });
 
@@ -368,13 +385,6 @@ const contractABI = [
     },
 ];
 
-// Function to update the status message
-function updateStatusMessage(message) {
-    const statusMessageElement = document.getElementById('statusMessage');
-    statusMessageElement.textContent = message;
-}
-
-
 
 const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
 
@@ -387,42 +397,40 @@ const signer = provider.getSigner();
 // Create a new instance of the contract
 const documentContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-// Event listener for the file upload button
 document.getElementById('uploadButton').addEventListener('click', async () => {
-    const fileInput = document.getElementById('fileInput');
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        console.log('Uploading file:', file.name);
-        updateStatusMessage('Uploading file...');
-        
-        try {
-            const fileHash = await uploadToIPFS(file);
-            console.log(`File uploaded to IPFS with hash: ${fileHash}`);
-            updateStatusMessage(`File uploaded. IPFS Hash: ${fileHash}`);
-            
-            // Call smart contract to store the CID
-            const tx = await documentContract.addDocument(fileHash);
-            console.log(`Transaction sent. Waiting for confirmation...`);
-            await tx.wait();
-            console.log(`Document hash stored in smart contract: ${tx.hash}`);
-            updateStatusMessage(`Document hash stored in smart contract: ${tx.hash}`);
-        } catch (error) {
-            console.error('File upload failed:', error);
-            updateStatusMessage(`File upload failed: ${error.message}`);
-        }
-    } else {
-        alert('Please select a file to upload.');
-        updateStatusMessage('No file selected.');
-    }
+  const fileInput = document.getElementById('fileInput');
+  if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      console.log('Uploading file:', file.name);
+      updateStatusMessage('Uploading file...');
+      
+      try {
+          const fileHash = await uploadToIPFS(file);
+          console.log(`File uploaded to IPFS with hash: ${fileHash}`);
+          // Call smart contract to store the CID
+          const tx = await documentContract.addDocument(fileHash);
+          console.log(`Transaction sent. Waiting for confirmation...`);
+          await tx.wait();
+          console.log(`Document hash stored in smart contract: ${tx.hash}`);
+          // Update the status message to include the link after confirmation
+          updateStatusMessage(`Document hash stored in smart contract: ${tx.hash}`, fileHash);
+      } catch (error) {
+          console.error('File upload failed:', error);
+          updateStatusMessage(`File upload failed: ${error.message}`);
+      }
+  } else {
+      alert('Please select a file to upload.');
+      updateStatusMessage('No file selected.');
+  }
 });
 
 async function uploadToIPFS(file) {
-    try {
-        const addedFile = await ipfs.add(file);
-        const fileHash = addedFile.cid.toString();
-        return fileHash;
-    } catch (error) {
-        console.error('Error uploading file to IPFS:', error);
-        throw error;
-    }
+  try {
+      const addedFile = await ipfs.add(file);
+      const fileHash = addedFile.cid.toString();
+      return fileHash;
+  } catch (error) {
+      console.error('Error uploading file to IPFS:', error);
+      throw error;
+  }
 }
