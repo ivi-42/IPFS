@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Decentralized Document Storage</title>
-    <!-- Ethers.js for Ethereum blockchain interaction -->
-    <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
-    <!-- IPFS HTTP Client for IPFS interaction -->
+    <title>Decentralized Document Storage for Worms</title>
+    <!-- Include IPFS HTTP client library -->
     <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
-    <!-- Add any additional styles here -->
 </head>
 <body>
     <input type="file" id="fileInput">
     <button id="uploadButton">Upload</button>
 
-    <!-- Your main JavaScript file -->
-    <script src="main.js"></script>
+    <!-- Include ethers.js as a module -->
+    <script type="module">
+        // Importing ethers from the CDN as a module
+        import { ethers } from "https://cdn.jsdelivr.net/npm/ethers/dist/ethers.esm.min.js";
+        
+        // main.js code access to the ethers object.
+        
+    </script>
 </body>
 </html>
