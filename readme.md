@@ -29,3 +29,28 @@ Navigate to the `crypto_Cloud` directory and run:
 ```sh
 npx hardhat compile
 npx hardhat run scripts/deploy.js --network localhost
+
+
+
++------------------+            +-------------------+
+|                  |            |                   |
+|  Worm Simulation +------------> Local IPFS Node   |
+|                  | Upload     |                   |
++--------+---------+ Output     +--------+----------+
+         |                                |
+         |                                | CID
+         |                                |
++--------v---------+            +---------v----------+
+|                  |            |                    |
+| Hardhat (Local   |            | Ethereum Network   |
+| Ethereum Node)   |            | (Smart Contract)   |
+|                  <------------+ DocumentVerification |
++--------+---------+ Store CID  +---------+----------+
+         |                                |
+         |                                |
++--------v---------+            +---------v----------+
+|                  |            |                    |
+|  Frontend (Web   | Interact   | Users/Participants |
+|  Interface)      <------------+                    |
+|                  |            |                    |
++------------------+            +--------------------+
