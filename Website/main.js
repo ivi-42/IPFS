@@ -1,13 +1,10 @@
+// Import the ethers library from a CDN
+import { ethers } from 'https://cdn.jsdelivr.net/npm/ethers/dist/ethers.esm.min.js';
 
-import { ethers } from 'ethers';
-import { create } from 'ipfs-http-client';
-
-
-
-
-
-// Access IpfsHttpClient from the global scope
+// Access the IPFS HTTP client from the global scope
 const ipfs = window.IpfsHttpClient.create({ host: 'localhost', port: '5001', protocol: 'http' });
+
+
 
 // Connect to the local Hardhat node
 const provider = new ethers.providers.JsonRpcProvider();
@@ -371,6 +368,12 @@ const contractABI = [
     },
 ];
 
+// Function to update the status message
+function updateStatusMessage(message) {
+    const statusMessageElement = document.getElementById('statusMessage');
+    statusMessageElement.textContent = message;
+}
+
 
 
 const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
@@ -384,24 +387,32 @@ const signer = provider.getSigner();
 // Create a new instance of the contract
 const documentContract = new ethers.Contract(contractAddress, contractABI, signer);
 
+// Event listener for the file upload button
 document.getElementById('uploadButton').addEventListener('click', async () => {
     const fileInput = document.getElementById('fileInput');
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
+        console.log('Uploading file:', file.name);
+        updateStatusMessage('Uploading file...');
+        
         try {
             const fileHash = await uploadToIPFS(file);
             console.log(`File uploaded to IPFS with hash: ${fileHash}`);
+            updateStatusMessage(`File uploaded. IPFS Hash: ${fileHash}`);
             
             // Call smart contract to store the CID
             const tx = await documentContract.addDocument(fileHash);
-            await tx.wait(); // Wait for the transaction to be mined
-            
+            console.log(`Transaction sent. Waiting for confirmation...`);
+            await tx.wait();
             console.log(`Document hash stored in smart contract: ${tx.hash}`);
+            updateStatusMessage(`Document hash stored in smart contract: ${tx.hash}`);
         } catch (error) {
-            alert(`File upload failed: ${error.message}`);
+            console.error('File upload failed:', error);
+            updateStatusMessage(`File upload failed: ${error.message}`);
         }
     } else {
         alert('Please select a file to upload.');
+        updateStatusMessage('No file selected.');
     }
 });
 
@@ -411,8 +422,7 @@ async function uploadToIPFS(file) {
         const fileHash = addedFile.cid.toString();
         return fileHash;
     } catch (error) {
-        console.error('Error uploading file to IPFS', error);
+        console.error('Error uploading file to IPFS:', error);
         throw error;
     }
 }
-
