@@ -61,3 +61,10 @@ npx hardhat run scripts/deploy.js --network localhost
 |  Interface)      <------------+                    |
 |                  |            |                    |
 +------------------+            +--------------------+
+
+
+
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://127.0.0.1:5500"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST", "GET"]'
+
+This to allow ports "internally".
