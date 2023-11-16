@@ -2,7 +2,7 @@
 
 This project provides a decentralized solution for document storage utilizing Ethereum, IPFS, and Hardhat for local development. It is used as storage of procedually generated virtual worms, with 30+ neurons.
 
-This project borns as an "answer" to the question of how, after waiting hours for 2 second of worms, how could i find a way to not lose them.
+This project borns as an "answer" to the question of how, after waiting hours for 2 second of worms, how could i find a way to not lose them. (the data)
 
 So i started an hypotetical decentralised server, but it didnt work for long, as I was the only person in it haha. 
 
