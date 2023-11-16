@@ -1,4 +1,11 @@
 
+import { ethers } from 'ethers';
+import { create } from 'ipfs-http-client';
+
+
+
+
+
 // Access IpfsHttpClient from the global scope
 const ipfs = window.IpfsHttpClient.create({ host: 'localhost', port: '5001', protocol: 'http' });
 
@@ -408,5 +415,4 @@ async function uploadToIPFS(file) {
         throw error;
     }
 }
-
 
