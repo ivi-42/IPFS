@@ -1,37 +1,67 @@
 #!/bin/bash
 
-# Clone the OpenWorm repository
-git clone http://github.com/openworm/openworm
-cd openworm
+# Clone the OpenWorm repository if it doesn't exist
+#!/bin/bash
+
+# Define the directory where openworm is expected to be
+OPENWORM_DIR="/home/gia86326/openworm"
+
+# Check if the directory exists
+if [ -d "$OPENWORM_DIR" ]; then
+  # Navigate to the directory
+  cd "$OPENWORM_DIR"
+  
+  # Check if start.sh is present and executable
+  if [ -x "./start.sh" ]; then
+    # Execute start.sh
+    ./start.sh
+  else
+    echo "start.sh is not present or not executable in $OPENWORM_DIR."
+  fi
+else
+  echo "The directory $OPENWORM_DIR does not exist."
+fi
+
+cd "$OPENWORM_DIR"
 
 # Build the Docker container (optional, can be skipped to use pre-built images)
-./build.sh  # or build.cmd on Windows
+#./build.sh  # or build.cmd on Windows
+
+# Ensure the Docker container is built. If not, exit the script with an error message.
+#if [[ "$(docker images -q openworm/openworm:0.9.3 2> /dev/null)" == "" ]]; then
+#  echo "Docker image not found. Exiting..."
+#  exit 1
+#fi
 
 # Run the simulation with the desired duration
-# Replace [num] with the duration in milliseconds, e.g., 5000 for 5 seconds
-./run.sh -d [num]  # or run.cmd on Windows
+./run.sh #-d [num]  # or run.cmd on Windows
 
 # Wait for the simulation to complete...
-# This would need to be determined. As a placeholder, using sleep for a period longer than the simulation run time
-sleep [duration_in_seconds]
+#sleep 3000  # Adjust this value based on the expected duration of the simulation
 
-# The simulation has completed at this point, and output should be in the "output" directory
+./stop.sh 
 
 # Assuming IPFS is installed and initialized
-# Navigate to the output directory and add the contents to IPFS
-cd output
-ipfs add -r . 
-
-# The above command will print out the CID of the uploaded content
-# You can capture this output and use it as needed, for example:
-
+# Add the contents of the output directory to IPFS
+cd openworm/output
 CID=$(ipfs add -r . | tail -n1 | cut -d ' ' -f 2)
 echo "Content added to IPFS with CID: $CID"
 
-# If you want to store the CID in a smart contract, you could then call a script to do this
-# You would need a script that uses web3.js or ethers.js to interact with your contract
-# Assuming you have such a script set up, you might call it like this:
+# Store the CID in a smart contract using a Node.js script
+node crypto_Cloud/scripts/storeCIDInContract.js $CID
 
-node storeCIDInContract.js $CID
 
-# storeCIDInContract.js would be a Node.js script that takes a CID as an argument and stores it in a smart contract
+# Save the URL to a text file
+echo "http://localhost:8080/ipfs/$CID" > open_url.txt
+
+
+# Open the uploaded content in the default web browser
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    xdg-open "http://localhost:8080/ipfs/$CID"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    open "http://localhost:8080/ipfs/$CID"
+elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+    start "http://localhost:8080/ipfs/$CID"
+else
+    echo "Cannot open browser: Unknown OS"
+fi
